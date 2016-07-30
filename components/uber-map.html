@@ -6,7 +6,7 @@
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
 <dom-module id="uber-map">
   <template>
-    <google-map latitude={{latitude}} longitude={{longitude}} zoom="16">
+    <google-map map="{{map}}" latitude={{latitude}} longitude={{longitude}} zoom="16" click-events="true" on-google-map-click="getLocation">
     </google-map>
     <template is="dom-if" if="{{products.length}}">
       <paper-card>
@@ -15,7 +15,7 @@
             <paper-tab>
               <paper-icon-button src="{{item.image}}" alt="{{item.description}}" title="{{item.description}}"></paper-icon-button>
               <span>{{item.display_name}}</span>
-            </paper-tab>
+            <paper-tab>
           </template>
         </paper-tabs>
       </paper-card>
@@ -54,10 +54,15 @@
     attached: function() {
       this.paramsProduct = {
           latitude: this.latitude,
-          longitude: this.longitude,
+          longitude: this.longitude
       };
-      this.isReady = true;
-      console.log(this.paramsProduct);                                                                   
+      this.isReady = true;                                                                  
+    },
+    getLocation : function(event){
+      this.paramsProduct = {
+          latitude: event.detail.latLng.lat(),
+          longitude: event.detail.latLng.lng()
+      };
     },
     drawUberProducts : function(request){
       this.products = request.detail.response.products;
