@@ -1,14 +1,25 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/google-map/google-map.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
 <dom-module id="uber-map">
   <template>
-    <style>
-      
-    </style>
-    <!-- local DOM goes here -->
     <google-map latitude={{latitude}} longitude={{longitude}} zoom="16">
     </google-map>
+    <template is="dom-if" if="{{products.length}}">
+      <paper-card>
+        <paper-tabs selected="0">
+          <template is="dom-repeat" items="{{products}}">
+            <paper-tab>
+              <paper-icon-button src="{{item.image}}" alt="{{item.description}}" title="{{item.description}}"></paper-icon-button>
+              <span>{{item.display_name}}</span>
+            </paper-tab>
+          </template>
+        </paper-tabs>
+      </paper-card>
+    </template>
     <iron-ajax 
       auto="{{isReady}}"
       url="https://api.uber.com/v1/products"
