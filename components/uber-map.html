@@ -1,18 +1,56 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/google-map/google-map.html">
-
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <dom-module id="uber-map">
   <template>
     <style>
       
     </style>
     <!-- local DOM goes here -->
-    <google-map latitude="25.657516" longitude="-100.366763" zoom="16">
+    <google-map latitude={{latitude}} longitude={{longitude}} zoom="16">
     </google-map>
+    <iron-ajax 
+      auto="{{isReady}}"
+      url="https://api.uber.com/v1/products"
+      headers='{"Authorization": "Token YOUR_TOKEN"}'
+      params={{paramsProduct}}
+      handle-as="json"
+      debounce-duration="300"
+      on-response="drawUberProducts">
+    </iron-ajax>
   </template>
   <script>
   Polymer({
-    is: 'uber-map'
+    is: 'uber-map',
+    properties : {
+      products: Array,
+      latitude: {
+        type: Number,
+        value: 25.657516
+      },
+      longitude: {
+        type: Number,
+        value: -100.366763
+      },
+      paramsProduct:{
+        type: Object
+      },
+      isReady:{
+        type:Boolean,
+        value: false
+      }
+    },
+    attached: function() {
+      this.paramsProduct = {
+          latitude: this.latitude,
+          longitude: this.longitude,
+      };
+      this.isReady = true;
+      console.log(this.paramsProduct);                                                                   
+    },
+    drawUberProducts : function(request){
+      this.products = request.detail.response.products;
+    }
   });
   </script>
 </dom-module>
